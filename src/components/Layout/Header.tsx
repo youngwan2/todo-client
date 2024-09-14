@@ -1,23 +1,23 @@
 import styled from "styled-components";
 import { useState } from 'react'
 import { createPortal } from 'react-dom';
-import LoginModal from "./LoginModal";
+import AuthModal from "../AuthModal";
 
 export default function Header() {
     const [showModal, setShowModal] = useState(false)
     
     const domNode = document.documentElement;
 
-    function handleToggle() {
+    function handleToggleModal() {
         setShowModal(prev=>!prev)
     }
 
     return (
         <HeaderContainer>
             <HeaderTitle>오늘의 할 일</HeaderTitle>
-            <LoginButton onClick={handleToggle}>로그인</LoginButton>
+            <LoginButton onClick={handleToggleModal}>로그인</LoginButton>
 
-            {createPortal(<LoginModal showModal={showModal} onClick={handleToggle}/> , domNode)}
+            {createPortal(<AuthModal showModal={showModal} onClick={handleToggleModal}/> , domNode)}
         </HeaderContainer>
     )
 }
@@ -36,7 +36,6 @@ const HeaderContainer = styled.header`
     top: 0;
     transition: background-color 0.3s ease-in-out;
     
-    /* header hover */
     &:hover {
       background-color: #222;
     }
@@ -50,7 +49,6 @@ const HeaderTitle = styled.h2`
     color: #fff;
     transition: color 0.3s ease-in-out;
     
-    /* header active */
     &:active {
       color: #ddd;
     }
@@ -64,7 +62,6 @@ const LoginButton = styled.div`
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     
-    /* login button hover */
     &:hover {
       background-color: #ddd;
     }

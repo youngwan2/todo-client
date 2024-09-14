@@ -1,13 +1,19 @@
 import styled from "styled-components";
 
 
+
+
 interface PropsType {
-    onToggle: () => void;
+    onToggle: ()=>void;
 }
-export default function LoginModal({ onToggle }: PropsType) {
+export default function SignUpModal({ onToggle }: PropsType) {
     return (
         <Form>
-            <Title>로그인</Title>
+            <Title>회원가입</Title>
+            <InputArea>
+                <Label htmlFor="username">Username</Label>
+                <Input placeholder="유저이름(닉네임)" type="text" name="username" />
+            </InputArea>
             <InputArea>
                 <Label htmlFor="email">Email</Label>
                 <Input placeholder="이메일" type="text" name="email" />
@@ -17,8 +23,12 @@ export default function LoginModal({ onToggle }: PropsType) {
                 <Label htmlFor="password">Password</Label>
                 <Input placeholder="비밀번호" type="password" name="password" />
             </InputArea>
-            <Button>로그인</Button>
-            <ToggleButton onClick={onToggle}>회원이 아니신가요?</ToggleButton>
+            <InputArea>
+                <Label htmlFor="password-confirm">Confirm</Label>
+                <Input placeholder="비밀번호 재확인" type="password" name="password-confirm" />
+            </InputArea>
+            <Button>등록</Button>
+            <ToggleButton onClick={onToggle}>이미 회원 이신가요?</ToggleButton>
         </Form>
     )
 }
@@ -26,13 +36,13 @@ export default function LoginModal({ onToggle }: PropsType) {
 
 const Form = styled.form``
 
+
 const Title = styled.h2`
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 2rem;
     text-align: center;
     font-weight: 600;
-    color: #333;
 `
 
 const InputArea = styled.div`
@@ -93,3 +103,4 @@ const ToggleButton = styled.button`
     }
 
 `
+
