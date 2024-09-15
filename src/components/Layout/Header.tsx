@@ -1,23 +1,36 @@
 import styled from "styled-components";
 import { useState } from 'react'
 import { createPortal } from 'react-dom';
-import AuthModal from "../AuthModal";
+import AuthModal from "../Modal/AuthModal";
+import { icons } from "../../constants/icon"
+import WriteModal from "../Modal/WriteModal";
 
 export default function Header() {
-    const [showModal, setShowModal] = useState(false)
-    
+    const [showLoginModal, setShowLoginModal] = useState(false)
+    const [showWriteModal, setShowWriteModal] = useState(false)
+
+    const { WriteIcon, LoginIcon } = icons
+
+
     const domNode = document.documentElement;
 
-    function handleToggleModal() {
-        setShowModal(prev=>!prev)
+    function handleToggleLoginModal() {
+        setShowLoginModal(prev => !prev)
     }
+    function handleToggleWriteModal() {
+        setShowWriteModal(prev => !prev)
+    }
+
 
     return (
         <HeaderContainer>
             <HeaderTitle>오늘의 할 일</HeaderTitle>
-            <LoginButton onClick={handleToggleModal}>로그인</LoginButton>
-
-            {createPortal(<AuthModal showModal={showModal} onClick={handleToggleModal}/> , domNode)}
+            <ButtonContainer>
+                <LoginButton onClick={handleToggleLoginModal}><LoginIcon /><Span>로그인</Span></LoginButton>
+                <WriteButton onClick={handleToggleWriteModal}><WriteIcon /><Span>글쓰기</Span></WriteButton>
+            </ButtonContainer>
+            {createPortal(<AuthModal showModal={showLoginModal} onClick={handleToggleLoginModal} />, domNode)}
+            {createPortal(<WriteModal showModal={showWriteModal} onClick={handleToggleWriteModal} />, domNode)}
         </HeaderContainer>
     )
 }
@@ -54,7 +67,10 @@ const HeaderTitle = styled.h2`
     }
 `
 
-const LoginButton = styled.div`
+const ButtonContainer = styled.div`
+    display: flex;
+`
+const LoginButton = styled.button`
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -65,4 +81,26 @@ const LoginButton = styled.div`
     &:hover {
       background-color: #ddd;
     }
+`
+
+const WriteButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left:3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    
+    &:hover {
+      background-color: #ddd;
+    }
+`
+
+const Span = styled.span`
+    padding-left: 3px;
+
 `
