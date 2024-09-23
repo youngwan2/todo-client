@@ -31,8 +31,13 @@ export default function SignUpModal({ onToggle }: PropsType) {
             password,
         }
 
-        const response = await addUser(user)
-        console.log(response)
+        const message = await addUser(user)
+        if(!message){
+            alert("회원가입 실패")
+        } else {
+            alert("회원가입 성공")
+            onToggle()
+        }
     }
 
     function handleSetUsername(e: ChangeEvent<HTMLInputElement>) {

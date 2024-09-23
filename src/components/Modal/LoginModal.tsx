@@ -1,21 +1,46 @@
 import styled from "styled-components";
+import { login } from "../../services/authService";
+import { FormEvent, useState } from "react";
 
 
 interface PropsType {
     onToggle: () => void;
 }
 export default function LoginModal({ onToggle }: PropsType) {
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+
+    async function handleSummit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        const user = {
+            username,
+            password,
+        }
+        try {
+            const message = await login(user)
+            alert(message)
+            onToggle()
+        } catch (error) {
+            if (error instanceof Error)
+                alert(error.message)
+        }
+    }
+
+
     return (
-        <Form>
+        <Form onSubmit={handleSummit}>
             <Title>로그인</Title>
             <InputArea>
-                <Label htmlFor="email">Email</Label>
-                <Input placeholder="이메일" type="text" name="email" />
+                <Label htmlFor="username">Username</Label>
+                <Input onChange={(e) => setUsername(e.currentTarget.value)} placeholder="아이디" type="text" name="username" />
             </InputArea>
 
             <InputArea>
                 <Label htmlFor="password">Password</Label>
-                <Input placeholder="비밀번호" type="password" name="password" />
+                <Input onChange={(e) => setPassword(e.currentTarget.value)} placeholder="비밀번호" type="password" name="password" />
             </InputArea>
             <Button>로그인</Button>
             <ToggleButton onClick={onToggle}>회원이 아니신가요?</ToggleButton>

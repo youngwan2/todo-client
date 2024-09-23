@@ -1,8 +1,8 @@
 
 
-export const EMAIL_VALIDATION=`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-export const PASSWORD_VALIDATION=`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-export const USERNAME_VALIDATION=`^[a-zA-Z0-9_]{3,16}$`
+export const EMAIL_VALIDATION = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`;
+export const PASSWORD_VALIDATION = `^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$`; 
+export const USERNAME_VALIDATION = `^[a-zA-Z0-9_]{3,16}$`;
 
 
 /** 패스워드 
