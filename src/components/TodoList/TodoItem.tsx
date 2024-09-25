@@ -11,7 +11,7 @@ export default function TodoItem({ todo }: PropsType) {
 
   const { ContentIcon, DateIcon, IdIcon, TimeIcon } = icons
   return (
-    <Item>
+    <Item key={todo.id}>
       <ItemId><IdIcon color="#03A356" /><Span>{todo.id}</Span></ItemId>
       <Flex>
         <ItemTitle><ContentIcon color="#03A356" /><Span>{todo.title}</Span></ItemTitle>

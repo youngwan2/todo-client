@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Header from "./components/Layout/Header";
 import Body from "./components/Layout/Body";
+import { AuthProvider } from "./contexts/AuthProvider";
 
 
 const Section = styled.section`
@@ -12,10 +13,11 @@ const Section = styled.section`
 `
 export default function Root() {
   return (
-    <Section>
-      <Header />
-      <Body/>
-    </Section>
-
+    <AuthProvider>
+      <Section>
+        <Header />
+        <Body />
+      </Section>
+    </AuthProvider>
   )
 }

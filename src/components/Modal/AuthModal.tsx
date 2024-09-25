@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
 import { Overlay } from "../Common/Overlay";
+import { AuthContext } from "../../contexts/AuthContext";
 
 
 interface PropsType {
@@ -15,14 +16,18 @@ interface PropsType {
 
 export default function AuthModal({ showModal, onClick }: PropsType) {
     const [toggle, setToggle] = useState(true);
+    const {isLoggedIn} = useContext(AuthContext)
 
     function onToggle() {
         setToggle(old => !old);
     }
 
+    if(isLoggedIn){
+        return <></>;
+    }
     return (
         <>
-            <Overlay onClick={onClick} showModal={showModal}></Overlay>
+            <Overlay onClick={onClick} $showmodal={showModal}></Overlay>
             <Container showModal={showModal}>
                 {toggle ? <LoginModal onToggle={onToggle} /> : <SignUpModal onToggle={onToggle} />}
             </Container>

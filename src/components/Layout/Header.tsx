@@ -1,18 +1,25 @@
 import styled from "styled-components";
-import { useState } from 'react'
+
+import { useState, useContext } from 'react'
 import { createPortal } from 'react-dom';
+
 import AuthModal from "../Modal/AuthModal";
-import { icons } from "../../constants/icon"
 import WriteModal from "../Modal/WriteModal";
+
+import { icons } from "../../constants/icon"
+import { AuthContext } from "../../contexts/AuthContext";
+import LogoutButton from "../Button/LogoutButton";
+
 
 export default function Header() {
     const [showLoginModal, setShowLoginModal] = useState(false)
     const [showWriteModal, setShowWriteModal] = useState(false)
 
+    const { isLoggedIn } = useContext(AuthContext)
+
     const { WriteIcon, LoginIcon } = icons
 
-
-    const domNode = document.documentElement;
+    const domNode = document.body;
 
     function handleToggleLoginModal() {
         setShowLoginModal(prev => !prev)
@@ -26,8 +33,14 @@ export default function Header() {
         <HeaderContainer>
             <HeaderTitle>오늘의 할 일</HeaderTitle>
             <ButtonContainer>
-                <LoginButton onClick={handleToggleLoginModal}><LoginIcon /><Span>로그인</Span></LoginButton>
-                <WriteButton onClick={handleToggleWriteModal}><WriteIcon /><Span>글쓰기</Span></WriteButton>
+                {isLoggedIn
+                    ? (
+                        <>
+                            <LogoutButton />
+                            <WriteButton onClick={handleToggleWriteModal}><WriteIcon /><Span>글쓰기</Span></WriteButton>
+                        </>)
+                    : <LoginButton onClick={handleToggleLoginModal}><LoginIcon /><Span>로그인</Span></LoginButton>
+                }
             </ButtonContainer>
             {createPortal(<AuthModal showModal={showLoginModal} onClick={handleToggleLoginModal} />, domNode)}
             {createPortal(<WriteModal showModal={showWriteModal} onClick={handleToggleWriteModal} />, domNode)}

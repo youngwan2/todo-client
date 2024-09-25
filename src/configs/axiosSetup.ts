@@ -9,3 +9,4 @@ export const apiClient = axios.create({
 
 apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + getToken()
 apiClient.defaults.headers.post["Content-Type"] = 'application/json'
+apiClient.defaults.withCredentials = true;

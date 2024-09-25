@@ -1,6 +1,9 @@
 import styled from "styled-components";
-import { login } from "../../services/authService";
-import { FormEvent, useState } from "react";
+
+import { FormEvent, useState, useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+
+import { login as loginApi } from "../../services/authService";
 
 
 interface PropsType {
@@ -11,6 +14,7 @@ export default function LoginModal({ onToggle }: PropsType) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const {login} = useContext(AuthContext)
 
     async function handleSummit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -20,9 +24,10 @@ export default function LoginModal({ onToggle }: PropsType) {
             password,
         }
         try {
-            const message = await login(user)
+            const message = await loginApi(user)
+            login() // 로그인 상태 관리
             alert(message)
-            onToggle()
+            
         } catch (error) {
             if (error instanceof Error)
                 alert(error.message)

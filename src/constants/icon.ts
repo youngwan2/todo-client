@@ -6,7 +6,7 @@ import { IoCalendarNumberOutline } from "react-icons/io5";
 import { MdOutlineContentPaste } from "react-icons/md";
 import { FiClock } from "react-icons/fi";
 import { TfiWrite } from "react-icons/tfi";
-import { CiLogin } from "react-icons/ci";
+import { CiLogin, CiLogout } from "react-icons/ci";
 
 
 export  const icons = {
@@ -15,5 +15,7 @@ export  const icons = {
     ContentIcon: MdOutlineContentPaste,
     TimeIcon: FiClock,
     WriteIcon: TfiWrite,
-    LoginIcon: CiLogin
+    LoginIcon: CiLogin,
+    LogoutIcon: CiLogout,
+
 }

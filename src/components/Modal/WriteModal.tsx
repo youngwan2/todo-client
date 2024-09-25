@@ -8,22 +8,24 @@ interface PropsType {
   onClick: () => void
 }
 
+
+
 export default function WriteModal({ showModal, onClick }: PropsType) {
 
-  const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [selectedDays, setSelectedDays] = useState(['월']);
   const [planTime, setPlanTime] = useState({
     start: {
-      hours: 0,
-      minutes: 0,
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes(),
     },
     end: {
-      hours: 0,
-      minutes: 0,
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes(),
     },
   })
-  const [selectedDays, setSelectedDays] = useState(['월']);
+
 
   const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
@@ -36,11 +38,12 @@ export default function WriteModal({ showModal, onClick }: PropsType) {
   };
 
 
-  const handleSetStartHour=(e:ChangeEvent<HTMLInputElement>)=>{
-    const hour = Number(e.currentTarget.value);
-
+  // 시작 시간
+  const handleSetStartHour = (e: ChangeEvent<HTMLInputElement>) => {
+    let hour = timeSlice(e.currentTarget.value);
+    hour = handleHourLimit(hour)
     setPlanTime((prevTime) => ({
-     ...prevTime,
+      ...prevTime,
       start: {
         hours: hour,
         minutes: prevTime.start.minutes,
@@ -48,10 +51,12 @@ export default function WriteModal({ showModal, onClick }: PropsType) {
     }));
   }
 
-  const handleSetStartMinute=(e:ChangeEvent<HTMLInputElement>)=>{
-    const minute = Number(e.currentTarget.value);
+  // 시작 분
+  const handleSetStartMinute = (e: ChangeEvent<HTMLInputElement>) => {
+    let minute = timeSlice(e.currentTarget.value);
+    minute = handleMinuteLimit(minute)
     setPlanTime((prevTime) => ({
-     ...prevTime,
+      ...prevTime,
       start: {
         hours: prevTime.start.hours,
         minutes: minute,
@@ -59,10 +64,12 @@ export default function WriteModal({ showModal, onClick }: PropsType) {
     }));
   }
 
-  const handleSetEndHour=(e:ChangeEvent<HTMLInputElement>)=>{
-    const hour = Number(e.currentTarget.value);
+  // 끝 시간
+  const handleSetEndHour = (e: ChangeEvent<HTMLInputElement>) => {
+    let hour = timeSlice(e.currentTarget.value);
+    hour = handleHourLimit(hour)
     setPlanTime((prevTime) => ({
-     ...prevTime,
+      ...prevTime,
       end: {
         hours: hour,
         minutes: prevTime.end.minutes,
@@ -70,39 +77,69 @@ export default function WriteModal({ showModal, onClick }: PropsType) {
     }));
   }
 
-  const handleSetEndMinute=(e:ChangeEvent<HTMLInputElement>)=>{
-    const minute = Number(e.currentTarget.value);
-    setPlanTime((prevTime)=>({
+  // 끝 분
+  const handleSetEndMinute = (e: ChangeEvent<HTMLInputElement>) => {
+    let minute = timeSlice(e.currentTarget.value);
+    minute = handleMinuteLimit(minute)
+
+    setPlanTime((prevTime) => ({
       ...prevTime,
       end: {
-        hours:prevTime.end.hours,
+        hours: prevTime.end.hours,
         minutes: minute,
       }
     }))
   }
 
 
+  // 시간 제한: 0 ~ 23
+  const handleHourLimit = (value: number) => {
+    if (value < 0) return Math.max(value, 0);
+    if (value >= 24) return Math.min(value, 23);
+    return Math.min(value, 23)
+  }
+
+  // 분 제한: 0 ~ 59
+  const handleMinuteLimit = (value: number) => {
+    if (value < 0) return Math.max(value, 0);
+    if (value >= 60) return Math.min(value, 59);
+    return Math.min(value, 59)
+  }
+
+  // 숫자 범위 제한
+  const timeSlice = (value: string) => {
+    return Number(value.slice(0, 2))
+  }
+
+
+  // 등록
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const todo={
+    const todo = {
       title,
       description,
-      startTime:`${planTime.start.hours}:${planTime.start.minutes}` ,
-      endTime:`${planTime.end.hours}:${planTime.end.minutes}`,
+      startTime: `${planTime.start.hours}:${planTime.start.minutes}`,
+      endTime: `${planTime.end.hours}:${planTime.end.minutes}`,
       selectedDays,
-      completed:false
+      completed: false
 
     }
-    await addTodo(todo)
+    try {
+      const data = await addTodo(todo)
+      alert(data.message)
+    } catch (err) {
+      if(err instanceof Error){
+        alert(err.message)
+      }
+    }
   };
-
 
 
   return (
     <>
-      <Overlay showModal={showModal} onClick={onClick} />
-      <WriteForm showModal={showModal} onSubmit={handleSubmit} >
+      <Overlay $showmodal={showModal} onClick={onClick} />
+      <WriteForm $showmodal={showModal} onSubmit={handleSubmit} >
         <Label htmlFor="title">제목</Label>
         <Input
           type="text"
@@ -123,13 +160,17 @@ export default function WriteModal({ showModal, onClick }: PropsType) {
 
         <Label>시간 범위</Label>
         <Range>
-          <Input onChange={handleSetStartHour} type="number" min={0} max={24} maxLength={2} />
-          :
-          <Input onChange={handleSetStartMinute} type="number" min={0} max={60} maxLength={2} />
+          <RangeGroup>
+            <Input onChange={handleSetStartHour} name="start-hours" type="number" min={0} max={23} maxLength={2} required defaultValue={planTime.start.hours} />
+            :
+            <Input onChange={handleSetStartMinute} name="start-minutes" type="number" min={0} max={59} maxLength={2} required defaultValue={planTime.start.minutes} />
+          </RangeGroup>
           ~
-          <Input onChange={handleSetEndHour} type="number" min={0} max={24} maxLength={2} />
-          :
-          <Input onChange={handleSetEndMinute} type="number" min={0} max={60} maxLength={2} />
+          <RangeGroup>
+            <Input onChange={handleSetEndHour} name="end-hours" type="number" min={0} max={23} maxLength={2} required defaultValue={planTime.start.hours} />
+            :
+            <Input onChange={handleSetEndMinute} type="end-minutes" min={0} max={59} maxLength={2} required defaultValue={planTime.start.minutes} />
+          </RangeGroup>
         </Range>
 
         <Label>요일</Label>
@@ -153,13 +194,14 @@ export default function WriteModal({ showModal, onClick }: PropsType) {
 }
 
 
-const WriteForm = styled.form<({ showModal?: boolean }) >`
-  visibility: ${({ showModal }) => showModal ? 'visible' : 'hidden'};
-  opacity: ${({ showModal }) => showModal ? 1 : 0};
+const WriteForm = styled.form<({ $showmodal: boolean }) >`
+  visibility: ${({ $showmodal }) => $showmodal ? 'visible' : 'hidden'};
+  opacity: ${({ $showmodal }) => $showmodal ? 1 : 0};
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 400px;
+  max-width: 450px;
+  width: 100%;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -173,6 +215,7 @@ const WriteForm = styled.form<({ showModal?: boolean }) >`
 
 const Input = styled.input`
   padding: 10px;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 5px;
 `;
@@ -190,10 +233,18 @@ const Label = styled.label`
 
 const Range = styled.div`
   display: flex;
+  width: 100%;
   align-items: center;
-  gap: 10px;
+  gap: 2px;
 `;
 
+const RangeGroup = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+`
 const WeekdaysContainer = styled.div`
   display: flex;
   gap: 10px;

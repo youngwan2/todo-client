@@ -13,7 +13,7 @@ export default function Todo() {
             <TodoList>
                 {fakeData.map((todo:TodoType) => {
                     return (
-                        <TodoItem todo={todo}/>)
+                        <TodoItem todo={todo} key={todo.id}/>)
                 })}
 
             </TodoList>

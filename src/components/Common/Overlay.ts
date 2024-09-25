@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export const Overlay = styled.div<{ showModal?: boolean }> `
-    visibility:  ${({ showModal }) => showModal ? "visible" : "hidden"};
-    opacity:  ${({ showModal }) => showModal ? 1 : 0};
+export const Overlay = styled.div<{ $showmodal: boolean }> `
+    visibility:  ${({ $showmodal }) => $showmodal ? "visible" : "hidden"};
+    opacity:  ${({ $showmodal }) => $showmodal ? 1 : 0};
     transition: 0.5s opacity, 0.5s visibility;
     position: fixed;
     background-color: #0000002c;

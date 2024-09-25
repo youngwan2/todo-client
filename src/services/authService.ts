@@ -1,7 +1,13 @@
+import axios from 'axios';
 import { User } from '../types/user';
 import { setToken } from '../utils/tokenUtil';
-import { apiClient } from '../configs/axiosSetup';
 
+
+export const apiClient = axios.create({
+    baseURL: 'http://localhost:80/',
+});
+
+apiClient.defaults.headers.post["Content-Type"] = 'application/json'
 
 // 회원중복 확인
 async function duplicateUser(username: string) {
